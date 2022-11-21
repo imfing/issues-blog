@@ -8,7 +8,9 @@ jobs:
   build-deploy:
     runs-on: ubuntu-latest
     permissions:
-      issues: read
+      contents: write
+      issues: write
+      pages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
