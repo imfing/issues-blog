@@ -4,13 +4,11 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+permissions: write-all
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      issues: write
-      pages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
