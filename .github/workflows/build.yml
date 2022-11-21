@@ -18,6 +18,8 @@ jobs:
 
       - name: Fetch Issues
         run: deno run --allow-net --allow-env --allow-write main.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
