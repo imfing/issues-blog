@@ -1,0 +1,5 @@
+# Issues state to publish: "all"|"closed"|"open"
+state = "closed"
+
+# If the following labels is present, the issue will not be published
+excludedLabels = ["do-not-publish"]

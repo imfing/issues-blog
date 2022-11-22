@@ -1,13 +1,13 @@
 import { Octokit } from "https://cdn.skypack.dev/octokit?dts";
 import { RestEndpointMethodTypes } from "https://cdn.skypack.dev/@octokit/plugin-rest-endpoint-methods?dts";
 import { format } from "https://deno.land/std@0.165.0/datetime/mod.ts";
-import { stringify } from "https://deno.land/std@0.165.0/encoding/yaml.ts";
+import { stringify as yamlStringify } from "https://deno.land/std@0.165.0/encoding/yaml.ts";
 import { join as pathJoin } from "https://deno.land/std@0.162.0/path/mod.ts";
 import { sanitize } from "https://deno.land/x/sanitize_filename@1.2.1/sanitize.ts";
+import { parse as tomlParse } from "https://deno.land/std@0.165.0/encoding/toml.ts";
 
-async function writeFile(path: string, text: string): Promise<void> {
-  return await Deno.writeTextFile(path, text);
-}
+const OUTPUT_DIR = "content/posts";
+const CONFIG_FILE = "scripts/config.toml";
 
 // Types
 type IssuesListCommentsParameters =
@@ -22,7 +22,25 @@ type IssuesListForRepoResponse =
   RestEndpointMethodTypes["issues"]["listForRepo"]["response"];
 type IssuesListForRepoResponseDataType = IssuesListForRepoResponse["data"];
 
+// Write file function
+async function writeFile(path: string, text: string): Promise<void> {
+  return await Deno.writeTextFile(path, text);
+}
+
+// Format date
 const formatDate = (d: string) => format(new Date(d), "yyyy-MM-dd");
+
+// Read config file in toml format, return {} if error occurs
+async function readConfigFile(path: string): Promise<Record<string, unknown>> {
+  try {
+    const text = await Deno.readTextFile(path);
+    const config = tomlParse(text);
+    return Promise.resolve(config);
+  } catch (error) {
+    console.error(error);
+    return Promise.resolve({});
+  }
+}
 
 // Get GitHub token from environment variable
 const GITHUB_TOKEN: string = Deno.env.get("GITHUB_TOKEN")!;
@@ -32,6 +50,9 @@ const [owner, repo] = GITHUB_REPOSITORY.split("/");
 
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
+// Read config toml file
+const config = await readConfigFile(CONFIG_FILE);
+
 // Iterate over all issues
 const iterator = octokit.paginate.iterator(
   octokit.rest.issues.listForRepo,
@@ -39,21 +60,13 @@ const iterator = octokit.paginate.iterator(
     owner: owner,
     repo: repo,
     per_page: 100,
-    state: "all", // TODO: make it a flag
+    state: config.state || "all",
   } as IssuesListForRepoParameters,
 );
 
 for await (const { data: issues } of iterator) {
   for (const issue of issues as IssuesListForRepoResponseDataType) {
     console.log("Issue #%d: %s", issue.number, issue.title);
-
-    // Get comments for the issue
-    const resp: IssuesListCommentsResponse = await octokit.rest.issues
-      .listComments({
-        owner: owner,
-        repo: repo,
-        issue_number: issue.number,
-      } as IssuesListCommentsParameters);
 
     // Construct frontmatter
     const title = issue.title;
@@ -64,9 +77,18 @@ for await (const { data: issues } of iterator) {
         return l.name!;
       }
       return l;
-    }) || [];
+    }) as Array<string> || [];
 
-    const frontmatter = stringify({
+    // Skip if some label is present in the excludedLabels
+    const shouldSkip = labels.some(
+      (l) => (config.excludedLabels as Array<string>).includes(l),
+    );
+    if (shouldSkip) {
+      console.log("Skip...");
+      continue;
+    }
+
+    const frontmatter = yamlStringify({
       "title": title,
       "date": createDate,
       "lastMod": updateDate,
@@ -75,18 +97,28 @@ for await (const { data: issues } of iterator) {
 
     const frontmatterContent = `---\n${frontmatter}\n---`;
     const issueContent = issue.body!.trim();
+
+    // Get comments for the issue
+    const resp: IssuesListCommentsResponse = await octokit.rest.issues
+      .listComments({
+        owner: owner,
+        repo: repo,
+        issue_number: issue.number,
+      } as IssuesListCommentsParameters);
+
     const commentsContent =
       (resp.data.map((comment: IssuesListCommentsResponseDataType[number]) =>
-        comment.body
+        comment.body!
       ) || [])
         .join("\n\n").trim();
 
+    // Construct YAML content
     const content = [frontmatterContent, issueContent, commentsContent]
-      .join("\n\n");
+      .join("\n\n").trim();
 
-    // Write to file
+    // Write markdown file to OUTPUT_DIR
     const filename = sanitize(title);
-    const outpath = pathJoin("content/posts", `${filename}.md`);
+    const outpath = pathJoin(OUTPUT_DIR, `${filename}.md`);
 
     await writeFile(outpath, content);
     console.log(`Write to file: ${outpath}`);
