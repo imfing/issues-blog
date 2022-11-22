@@ -46,6 +46,8 @@ const iterator = octokit.paginate.iterator(
 for await (const { data: issues } of iterator) {
   for (const issue of issues as IssuesListForRepoResponseDataType) {
     console.log("Issue #%d: %s", issue.number, issue.title);
+
+    // Get comments for the issue
     const resp: IssuesListCommentsResponse = await octokit.rest.issues
       .listComments({
         owner: owner,
@@ -73,18 +75,21 @@ for await (const { data: issues } of iterator) {
 
     const frontmatterContent = `---\n${frontmatter}\n---`;
     const issueContent = issue.body!.trim();
-    const commentsContent = (resp.data.map((comment) => comment.body) || [])
-      .join("\n\n").trim();
+    const commentsContent =
+      (resp.data.map((comment: IssuesListCommentsResponseDataType[number]) =>
+        comment.body
+      ) || [])
+        .join("\n\n").trim();
 
-    const content = [frontmatterContent, issueContent, commentsContent].join(
-      "\n\n",
-    );
+    const content = [frontmatterContent, issueContent, commentsContent]
+      .join("\n\n");
 
     // Write to file
     const filename = sanitize(title);
     const outpath = pathJoin("content/posts", `${filename}.md`);
 
     await writeFile(outpath, content);
+    console.log(`Write to file: ${outpath}`);
   }
 }
 

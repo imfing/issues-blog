@@ -17,7 +17,8 @@ jobs:
           deno-version: v1.x
 
       - name: Fetch Issues
-        run: deno run --allow-net --allow-env --allow-write main.ts
+        run: |
+          deno run --allow-net --allow-env --allow-write scripts/main.ts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
