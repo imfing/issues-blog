@@ -1,6 +1,11 @@
 name: Fetch Issues and Publish Pages
 
 on:
+  # Run workflow automatically when issue has been closed
+  # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#issues
+  issues:
+    types: [closed]
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -18,7 +23,7 @@ jobs:
 
       - name: Fetch Issues
         run: |
-          deno run --allow-net --allow-env --allow-write scripts/main.ts
+          deno run --allow-net --allow-env --allow-read --allow-write scripts/main.ts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
