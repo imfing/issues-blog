@@ -12,6 +12,12 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+
+    # Skip if issue has label "do-not-publish"
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (!contains(github.event.issue.labels.*.name, 'do-not-publish'))
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
