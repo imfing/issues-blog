@@ -5,9 +5,9 @@ isoCode = "en"
 weight = 1
 rtl = false
 
-title = "Issues"
+title = "Blog"
 # logo = "img/logo.jpg"
-description = "My awesome blog"
+description = "Publish GitHub Issues as blog or newsletter via GitHub actions automatically"
 copyright = "© 2022 Fing"
 
 dateFormat = "2 January 2006"

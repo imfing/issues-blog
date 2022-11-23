@@ -24,7 +24,7 @@ It uses [GitHub Issues](https://docs.github.com/en/issues/tracking-your-work-wit
 
 - Easy to setup (see [Quick Start](https://imfing.github.io/issues-blog/posts/quick-start/))
 - Blazing fast build and deploy ⚡
-- Write from anywhere (GitHub web or mobile)
+- Write from anywhere with GitHub web or [mobile](https://github.com/mobile)
 - Clean and responsive blog theme 🫧
 
 ## Setup
