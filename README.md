@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-  Effortlessly writing and publishing 
+  Effortlessly write and publish ✏️
 </p>
 
 <p align="center">
@@ -14,11 +14,19 @@
 
 ## Overview
 
+🌎 [**Demo**](https://imfing.github.io/issues-blog/)
+
 Jog down ideas, notes or blog posts, publish it as website automatically. 
 
 It uses [GitHub Issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/quickstart) as CMS, [Hugo](https://gohugo.io/) and [GitHub Actions](https://docs.github.com/en/actions) for building the site. Hosted on [Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages) for free.
 
 ## Features
 
-- Easy to setup (see quick start)
+- Easy to setup (see [Quick Start](https://imfing.github.io/issues-blog/posts/quick-start/))
 - Blazing fast build and deploy ⚡
+- Write from anywhere (GitHub web or mobile)
+- Clean and responsive blog theme 🫧
+
+## Setup
+
+- [Quick Start](https://imfing.github.io/issues-blog/posts/quick-start/)
