@@ -4,7 +4,7 @@ fetch:
 	deno run --allow-net --allow-env --allow-read --allow-write scripts/main.ts
 
 # Run hugo development server
-dev:
+dev: fetch
 	hugo server -D
 
 # Build the site, using the markdown files from the `fetch` target
