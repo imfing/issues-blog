@@ -96,14 +96,19 @@ for await (const { data: issues } of iterator) {
       continue;
     }
 
-    const frontmatter = yamlStringify({
+    const frontmatter = Object({
       "title": title,
       "date": createDate,
       "lastMod": updateDate,
       "tags": labels,
     });
 
-    const frontmatterContent = `---\n${frontmatter}\n---`;
+    // Add `editURL` in frontmatter if enabled
+    if (config.enableEditUrl) {
+      frontmatter["editURL"] = issue.html_url;
+    }
+
+    const frontmatterContent = `---\n${yamlStringify(frontmatter)}\n---`;
     const issueContent = issue.body!.trim();
 
     // Get comments for the issue
