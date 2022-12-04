@@ -48,10 +48,13 @@ const GITHUB_REPOSITORY: string = Deno.env.get("GITHUB_REPOSITORY")!;
 
 const [owner, repo] = GITHUB_REPOSITORY.split("/");
 
-const octokit = new Octokit({ auth: GITHUB_TOKEN });
-
 // Read config toml file
 const config = await readConfigFile(CONFIG_FILE);
+
+const octokit = new Octokit({
+  auth: GITHUB_TOKEN,
+  baseUrl: String(config.baseUrl),
+});
 
 // Iterate over all issues
 const iterator = octokit.paginate.iterator(
