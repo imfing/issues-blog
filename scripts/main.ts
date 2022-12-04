@@ -69,6 +69,11 @@ const iterator = octokit.paginate.iterator(
 
 for await (const { data: issues } of iterator) {
   for (const issue of issues as IssuesListForRepoResponseDataType) {
+    // Skip pull requests, as GitHub's REST API considers every pull request an issue
+    if (issue.pull_request) {
+      continue;
+    }
+
     console.log("Issue #%d: %s", issue.number, issue.title);
 
     // Construct frontmatter
