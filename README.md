@@ -48,3 +48,4 @@ While storing and editing Markdown files in a GitHub repository is typical for b
 - more user-friendly interface with built-in labelling and search 🔍
 - accessible from mobile app and website, good for capturing thoughts 📱
 - streamlined workflow by leveraging [GitHub Projects](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/quickstart-for-projects) and Issue status (open/closed)
+- free GitHub CDN for displaying images and videos
