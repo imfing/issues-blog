@@ -1,10 +1,10 @@
-import { Octokit } from "https://cdn.skypack.dev/octokit?dts";
-import { RestEndpointMethodTypes } from "https://cdn.skypack.dev/@octokit/plugin-rest-endpoint-methods?dts";
-import { format } from "https://deno.land/std@0.165.0/datetime/mod.ts";
-import { stringify as yamlStringify } from "https://deno.land/std@0.165.0/encoding/yaml.ts";
-import { join as pathJoin } from "https://deno.land/std@0.162.0/path/mod.ts";
+import { Octokit } from "https://esm.sh/octokit@4.1.0?dts";
+import { RestEndpointMethodTypes } from "https://esm.sh/@octokit/plugin-rest-endpoint-methods@13.3.0?dts";
+import { format } from "jsr:@std/datetime";
+import { stringify as yamlStringify } from "jsr:@std/yaml";
+import { join as pathJoin } from "jsr:@std/path";
 import { sanitize } from "https://deno.land/x/sanitize_filename@1.2.1/sanitize.ts";
-import { parse as tomlParse } from "https://deno.land/std@0.165.0/encoding/toml.ts";
+import { parse as tomlParse } from "jsr:@std/toml";
 
 const OUTPUT_DIR = "content/posts";
 const CONFIG_FILE = "scripts/config.toml";

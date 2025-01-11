@@ -6,7 +6,6 @@ baseURL = "https://imfing.github.io/issues-blog/"
 defaultContentLanguage = "en"
 
 enableRobotsTXT = true
-paginate = 10
 summaryLength = 0
 rssLimit = 20
 
