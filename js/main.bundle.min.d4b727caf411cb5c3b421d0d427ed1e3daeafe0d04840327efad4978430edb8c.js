@@ -1,0 +1,1 @@
+function close_menu(){document.getElementById("menu-controller").checked=!1}
